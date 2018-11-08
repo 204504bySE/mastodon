@@ -54,6 +54,7 @@ module Mastodon
             Maintenance::UncacheMediaWorker.new.perform(m) unless options[:dry_run]
             options[:verbose] ? say(m.id) : say('.', :green, false)
             processed += 1
+            size      += m.file_file_size
           end
         end
       end
