@@ -178,7 +178,7 @@ class Request
 
           addresses.each do |address|
             begin
-              raise Mastodon::HostValidationError if PrivateAddressCheck.private_address?(IPAddr.new(address.to_s))
+              #raise Mastodon::HostValidationError if PrivateAddressCheck.private_address?(IPAddr.new(address.to_s))
 
               ::Timeout.timeout(time_slot, HTTP::TimeoutError) do
                 return super(address.to_s, *args)
