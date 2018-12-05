@@ -330,9 +330,12 @@ code {
     }
 
     input[type=text],
+    input[type=number],
     input[type=email],
-    input[type=password] {
-      border-bottom-color: $valid-value-color;
+    input[type=password],
+    textarea,
+    select {
+      border-color: lighten($error-red, 12%);
     }
 
     .error {
@@ -451,6 +454,10 @@ code {
         background-image: linear-gradient(to right, rgba(darken($ui-base-color, 10%), 0), darken($ui-base-color, 10%));
       }
     }
+  }
+
+  &.new_user button[type=submit] {
+    font-size: 17px;
   }
 }
 
