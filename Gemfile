@@ -23,7 +23,7 @@ gem 'paperclip-av-transcoder', '~> 0.6'
 gem 'streamio-ffmpeg', '~> 3.0'
 
 gem 'active_model_serializers', '~> 0.10'
-gem 'addressable', '~> 2.5'
+gem 'addressable', '~> 2.6'
 gem 'bootsnap', '~> 1.3', require: false
 gem 'browser'
 gem 'charlock_holmes', '~> 0.7.6'
@@ -149,3 +149,4 @@ gem 'redis-rails', '~> 5.0'
 gem 'faraday' 
 
 gem 'concurrent-ruby', require: false
+gem 'faraday' 
