@@ -1,4 +1,4 @@
-threads_count = ENV.fetch('MAX_THREADS') { 5 }.to_i
+threads_count = ENV.fetch('MAX_THREADS') { 8 }.to_i
 threads threads_count, threads_count
 
 if ENV['SOCKET']
