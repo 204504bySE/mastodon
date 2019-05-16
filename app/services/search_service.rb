@@ -33,7 +33,7 @@ class SearchService < BaseService
   end
 
   def perform_statuses_search!
-    definition = StatusesIndex.filter(term: { searchable_by: @account.id })
+    definition = StatusesIndex
                               .query(multi_match: { type: 'most_fields', query: @query, operator: 'and', fields: %w(text text.stemmed) })
 
     if @options[:account_id].present?
@@ -47,7 +47,7 @@ class SearchService < BaseService
       definition = definition.filter(range: { id: range })
     end
 
-    results             = definition.limit(@limit).offset(@offset).objects.compact
+    results             = definition.limit(@limit).order(created_at: :desc).offset(@offset).objects.compact
     account_ids         = results.map(&:account_id)
     account_domains     = results.map(&:account_domain)
     preloaded_relations = relations_map_for_account(@account, account_ids, account_domains)
