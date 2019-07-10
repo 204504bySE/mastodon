@@ -5,7 +5,6 @@
     .fields-group
       = f.simple_fields_for :account do |account_fields|
         = account_fields.input :username, wrapper: :with_label, label: false, required: true, input_html: { 'aria-label' => t('simple_form.labels.defaults.username'), :autocomplete => 'off', placeholder: t('simple_form.labels.defaults.username') }, append: "@#{site_hostname}", hint: false, disabled: closed_registrations?
-
       = f.input :email, placeholder: t('simple_form.labels.defaults.email'), required: true, input_html: { 'aria-label' => t('simple_form.labels.defaults.email'), :autocomplete => 'off' }, hint: false, disabled: closed_registrations?
       = f.input :password, placeholder: t('simple_form.labels.defaults.password'), required: true, input_html: { 'aria-label' => t('simple_form.labels.defaults.password'), :autocomplete => 'off' }, hint: false, disabled: closed_registrations?
       = f.input :password_confirmation, placeholder: t('simple_form.labels.defaults.confirm_password'), required: true, input_html: { 'aria-label' => t('simple_form.labels.defaults.confirm_password'), :autocomplete => 'off' }, hint: false, disabled: closed_registrations?
@@ -19,7 +18,16 @@
       = f.input :agreement, as: :boolean, wrapper: :with_label, label: t('auth.checkbox_agreement_html', rules_path: about_more_path, terms_path: terms_path), disabled: closed_registrations?
 
     .actions
-      = f.button :button, sign_up_message, type: :submit, class: 'button button-primary', disabled: closed_registrations?
+      - if ENV['RECAPTCHA_ENABLED'] == 'true'
+        %script(src='https://www.google.com/recaptcha/api.js')
+        = f.button :button, sign_up_message, type: :submit, class: 'button button-primary', id: 'registration-form', disabled: 'true'
+        %div{class: 'g-recaptcha',data: {sitekey: ENV['RECAPTCHA_SITE_KEY'], callback: 'on_submit_new_user', theme: 'dark'}}
+        :javascript
+          function on_submit_new_user(token) {
+            document.getElementById("registration-form").disabled = false;
+          }
+      - else
+        = f.button :button, sign_up_message, type: :submit, class: 'button button-primary', disabled: closed_registrations?
 
     - if closed_registrations? && @instance_presenter.closed_registrations_message.present?
       .simple_form__overlay-area__overlay
