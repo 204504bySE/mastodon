@@ -252,7 +252,7 @@ class Request
       alias new open
 
       def check_private_address(address)
-        raise Mastodon::HostValidationError if PrivateAddressCheck.private_address?(IPAddr.new(address.to_s))
+        #raise Mastodon::HostValidationError if PrivateAddressCheck.private_address?(IPAddr.new(address.to_s))
       end
     end
   end
