@@ -89,13 +89,6 @@ class Rack::Attack
     req.authenticated_user_id if (req.post? && req.path =~ API_DELETE_REBLOG_REGEX) || (req.delete? && req.path =~ API_DELETE_STATUS_REGEX)
   end
 
-  API_DELETE_REBLOG_REGEX = /\A\/api\/v1\/statuses\/[\d]+\/unreblog/.freeze
-  API_DELETE_STATUS_REGEX = /\A\/api\/v1\/statuses\/[\d]+/.freeze
-
-  throttle('throttle_api_delete', limit: 30, period: 30.minutes) do |req|
-    req.authenticated_user_id if (req.post? && req.path =~ API_DELETE_REBLOG_REGEX) || (req.delete? && req.path =~ API_DELETE_STATUS_REGEX)
-  end
-
   throttle('protected_paths', limit: 25, period: 5.minutes) do |req|
     req.remote_ip if req.post? && req.path =~ PROTECTED_PATHS_REGEX
   end
