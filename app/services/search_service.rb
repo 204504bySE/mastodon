@@ -49,8 +49,8 @@ class SearchService < BaseService
       definition = definition.filter(range: { id: range })
     end
 
-    # results             = definition.limit(@limit).order(created_at: :desc).offset(@offset).objects.compact
-    results             = definition.limit(@limit).offset(@offset).objects.compact
+    #results             = definition.limit(@limit).offset(@offset).objects.compact
+    results             = definition.limit(@limit).offset(@offset).objects.compact.sort_by!{|x| -(x.id)}
     account_ids         = results.map(&:account_id)
     account_domains     = results.map(&:account_domain)
     preloaded_relations = relations_map_for_account(@account, account_ids, account_domains)
