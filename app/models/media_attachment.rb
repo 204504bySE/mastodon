@@ -59,7 +59,7 @@ class MediaAttachment < ApplicationRecord
 
   IMAGE_STYLES = {
     original: {
-      pixels: 100_000_000, # 10000x10000px
+      pixels: 16_777_216, # 4096x4096px
       file_geometry_parser: FastGeometryParser,
     }.freeze,
 
