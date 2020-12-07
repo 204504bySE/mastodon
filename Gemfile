@@ -151,11 +151,13 @@ group :development do
 end
 
 group :production do
-  gem 'lograge', '~> 0.11'
-  gem 'redis-rails', '~> 5.0'
 end
 
+gem 'lograge', '~> 0.11'
+gem 'redis-rails', '~> 5.0'
+
 gem 'concurrent-ruby', require: false
+gem 'faraday' 
 gem 'connection_pool', require: false
 
 gem 'xorcist', '~> 1.1'

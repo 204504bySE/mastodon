@@ -49,6 +49,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     resource.invite_code = params[:invite_code] if resource.invite_code.blank?
     resource.sign_up_ip  = request.remote_ip
 
+    resource.current_sign_in_ip = request.remote_ip if resource.current_sign_in_ip.nil?
     resource.build_account if resource.account.nil?
   end
 
@@ -85,7 +86,8 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   end
 
   def allowed_registrations?
-    Setting.registrations_mode != 'none' || @invite&.valid_for_use?
+#    Setting.registrations_mode != 'none' || @invite&.valid_for_use?
+    (Setting.registrations_mode != 'none' || @invite&.valid_for_use?) && is_human?
   end
 
   def invite_code
@@ -113,6 +115,27 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
   def determine_layout
     %w(edit update).include?(action_name) ? 'admin' : 'auth'
+  end
+
+  concerning :RecaptchaFeature do
+    if ENV['RECAPTCHA_ENABLED'] == 'true'
+      def is_human?
+        g_recaptcha_response = params["g-recaptcha-response"]
+        return false unless g_recaptcha_response.present?
+        verify_by_recaptcha g_recaptcha_response
+      end
+      def verify_by_recaptcha(g_recaptcha_response)
+        conn = Faraday.new(url: 'https://www.google.com')
+        res = conn.post '/recaptcha/api/siteverify', {
+            secret: ENV['RECAPTCHA_SECRET_KEY'],
+            response: g_recaptcha_response
+        }
+        j = JSON.parse(res.body)
+        j['success']
+      end
+    else
+      def is_human?; true end
+    end
   end
 
   def set_sessions

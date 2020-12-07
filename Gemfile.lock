@@ -710,6 +710,7 @@ DEPENDENCIES
   ed25519 (~> 1.2)
   fabrication (~> 2.21)
   faker (~> 2.14)
+  faraday
   fast_blank (~> 1.0)
   fastimage
   fog-core (<= 2.1.0)
@@ -804,9 +805,7 @@ DEPENDENCIES
   webpacker (~> 5.2)
   webpush
   xorcist (~> 1.1)
-
 RUBY VERSION
    ruby 2.7.2p137
-
 BUNDLED WITH
    2.1.4
