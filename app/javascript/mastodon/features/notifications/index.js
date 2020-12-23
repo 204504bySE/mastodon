@@ -32,10 +32,16 @@ const messages = defineMessages({
   markAsRead : { id: 'notifications.mark_as_read', defaultMessage: 'Mark every notification as read' },
 });
 
+const getExcludedTypes = createSelector([
+  state => state.getIn(['settings', 'notifications', 'shows']),
+], (shows) => {
+  return ImmutableList(shows.filter(item => !item).keys());
+});
+
 const getNotifications = createSelector([
   state => state.getIn(['settings', 'notifications', 'quickFilter', 'show']),
   state => state.getIn(['settings', 'notifications', 'quickFilter', 'active']),
-  state => ImmutableList(state.getIn(['settings', 'notifications', 'shows']).filter(item => !item).keys()),
+  getExcludedTypes,
   state => state.getIn(['notifications', 'items']),
 ], (showFilterBar, allowedType, excludedTypes, notifications) => {
   if (!showFilterBar || allowedType === 'all') {
@@ -55,9 +61,8 @@ const mapStateToProps = state => ({
   hasMore: state.getIn(['notifications', 'hasMore']),
   numPending: state.getIn(['notifications', 'pendingItems'], ImmutableList()).size,
   lastReadId: state.getIn(['notifications', 'readMarkerId']),
-  canMarkAsRead: false,
-  //canMarkAsRead: state.getIn(['notifications', 'readMarkerId']) !== '0' && getNotifications(state).some(item => item !== null && compareId(item.get('id'), state.getIn(['notifications', 'readMarkerId'])) > 0),
-  needsNotificationPermission: state.getIn(['settings', 'notifications', 'alerts']).includes(true) && state.getIn(['notifications', 'browserSupport']) && state.getIn(['notifications', 'browserPermission']) === 'default',
+  canMarkAsRead: state.getIn(['notifications', 'readMarkerId']) !== '0' && getNotifications(state).some(item => item !== null && compareId(item.get('id'), state.getIn(['notifications', 'readMarkerId'])) > 0),
+  needsNotificationPermission: state.getIn(['settings', 'notifications', 'alerts']).includes(true) && state.getIn(['notifications', 'browserSupport']) && state.getIn(['notifications', 'browserPermission']) === 'default' && !state.getIn(['settings', 'notifications', 'dismissPermissionBanner']),
 });
 
 export default @connect(mapStateToProps)
@@ -231,7 +236,7 @@ class Notifications extends React.PureComponent {
 
     let extraButton = null;
 
-    if (canMarkAsRead) {
+    if (canMarkAsRead && false) {
       extraButton = (
         <button
           aria-label={intl.formatMessage(messages.markAsRead)}
