@@ -3320,7 +3320,7 @@ a.status-card.compact:hover {
     box-shadow: 0 1px 0 rgba($highlight-text-color, 0.3);
 
     &::before {
-      display: block;
+      display: none;
       content: "";
       position: absolute;
       bottom: -13px;
