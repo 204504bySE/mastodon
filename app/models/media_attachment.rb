@@ -78,13 +78,14 @@ class MediaAttachment < ApplicationRecord
         'loglevel' => 'fatal',
         'movflags' => 'faststart',
         'pix_fmt' => 'yuv420p',
-        'vf' => 'scale=\'trunc(iw/2)*2:trunc(ih/2)*2\'',
+        'vf' => 'hqdn3d,scale=\'trunc(iw/2)*2:trunc(ih/2)*2\'',
         'vsync' => 'cfr',
-        'c:v' => 'h264',
-        'maxrate' => '1300K',
-        'bufsize' => '1300K',
-        'frames:v' => 60 * 60 * 3,
-        'crf' => 18,
+        'c:v' => 'libx264',
+        'maxrate' => '2000K',
+        'bufsize' => '4000K',
+        #'frames:v' => 60 * 60 * 3,
+        'crf' => 23,
+        'qmin' => 18,
         'map_metadata' => '-1',
       }.freeze,
     }.freeze,
@@ -147,11 +148,11 @@ class MediaAttachment < ApplicationRecord
   }.freeze
 
   GLOBAL_CONVERT_OPTIONS = {
-    all: '-quality 84 -strip +set modify-date +set create-date',
+    all: '-quality 84 +set modify-date +set create-date',
   }.freeze
 
-  IMAGE_LIMIT = 10.megabytes
-  VIDEO_LIMIT = 40.megabytes
+  IMAGE_LIMIT = 100.megabytes
+  VIDEO_LIMIT = 1000.megabytes
 
   MAX_VIDEO_MATRIX_LIMIT = 2_304_000 # 1920x1200px
   MAX_VIDEO_FRAME_RATE   = 60
