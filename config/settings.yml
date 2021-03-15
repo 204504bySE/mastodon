@@ -31,7 +31,7 @@ defaults: &defaults
   system_font_ui: false
   noindex: false
   theme: 'default'
-  aggregate_reblogs: true
+  aggregate_reblogs: false
   advanced_layout: true
   use_blurhash: true
   use_pending_items: false
