@@ -421,10 +421,10 @@ class Status extends ImmutablePureComponent {
       status  = status.get('reblog');
     }
 
-    if (status.get('media_attachments').size > 0) {
-      if (pictureInPicture.get('inUse')) {
-        media = <PictureInPicturePlaceholder width={this.props.cachedMediaWidth} />;
-      } else if (this.props.muted) {
+    if (pictureInPicture.get('inUse')) {
+      media = <PictureInPicturePlaceholder width={this.props.cachedMediaWidth} />;
+    } else if (status.get('media_attachments').size > 0) {
+      if (this.props.muted) {
         media = (
           <AttachmentList
             compact
