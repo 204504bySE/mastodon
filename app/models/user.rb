@@ -477,8 +477,4 @@ class User < ApplicationRecord
   def invite_text_required?
     Setting.require_invite_text && !invited? && !external? && !bypass_invite_request_check?
   end
-
-  def invite_text_required?
-    Setting.require_invite_text && !invited? && !external? && !bypass_invite_request_check?
-  end
 end
