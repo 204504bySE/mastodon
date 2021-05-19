@@ -245,11 +245,6 @@ class Status extends ImmutablePureComponent {
     this.props.onOpenVideo(status.get('id'), status.getIn(['media_attachments', 0]), options);
   }
 
-  handleOpenVideoQuote = (options) => {
-    const status = this._properQuoteStatus();
-    this.props.onOpenVideo(status.get('id'), status.getIn(['media_attachments', 0]), options);
-  }
-
   handleOpenMedia = (media, index) => {
     this.props.onOpenMedia(this._properStatus().get('id'), media, index);
   }

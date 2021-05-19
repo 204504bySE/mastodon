@@ -60,6 +60,7 @@ export function normalizeStatus(status, normalOldStatus) {
     normalStatus.search_index = normalOldStatus.get('search_index');
     normalStatus.contentHtml = normalOldStatus.get('contentHtml');
     normalStatus.spoilerHtml = normalOldStatus.get('spoilerHtml');
+    normalStatus.spoiler_text = normalOldStatus.get('spoiler_text');
     normalStatus.hidden = normalOldStatus.get('hidden');
     normalStatus.quote = normalOldStatus.get('quote');
     normalStatus.quote_hidden = normalOldStatus.get('quote_hidden');
