@@ -14,6 +14,7 @@ es:
     browse_public_posts: Navega por un transmisión en vivo de publicaciones públicas en Mastodon
     contact: Contacto
     contact_missing: No especificado
+    contact_unavailable: No disponible
     discover_users: Descubrir usuarios
     documentation: Documentación
     federation_hint_html: Con una cuenta en %{instance} usted podrá seguir a las personas en cualquier servidor de Mastodon y más allá.
@@ -738,6 +739,7 @@ es:
     toot_layout: Diseño de las publicaciones
   application_mailer:
     notification_preferences: Cambiar preferencias de correo electrónico
+    salutation: "%{name}:"
     settings: 'Cambiar preferencias de correo: %{link}'
     view: 'Vista:'
     view_profile: Ver perfil
@@ -812,15 +814,24 @@ es:
     errors:
       invalid_key: no es una clave Ed25519 o Curve25519 válida
       invalid_signature: no es una firma Ed25519 válida
+  date:
+    formats:
+      default: "%d %b %Y"
+      with_month_name: "%d %B %Y"
   datetime:
     distance_in_words:
+      about_x_hours: "%{count} h"
       about_x_months: "%{count}m"
       about_x_years: "%{count}a"
       almost_x_years: "%{count}a"
       half_a_minute: Justo ahora
+      less_than_x_minutes: "%{count} m"
       less_than_x_seconds: Justo ahora
       over_x_years: "%{count}a"
+      x_days: "%{count} d"
+      x_minutes: "%{count} m"
       x_months: "%{count}m"
+      x_seconds: "%{count} s"
   deletes:
     challenge_not_passed: Los datos introducidos son incorrectos
     confirm_password: Ingresa tu contraseña actual para demostrar tu identidad
@@ -1067,8 +1078,13 @@ es:
   number:
     human:
       decimal_units:
+        format: "%n %u"
         units:
+          billion: MM
+          million: M
+          quadrillion: MB
           thousand: m
+          trillion: B
   otp_authentication:
     code_hint: Introduce el código generado por tu aplicación de autentificación para confirmar
     description_html: Si habilitas <strong>autenticación de dos factores</strong> a través de una aplicación de autenticación, el ingreso requerirá que estés en posesión de tu teléfono, que generará códigos para que ingreses.
@@ -1150,6 +1166,13 @@ es:
     description: "%{browser} en %{platform}"
     explanation: Estos son los navegadores web conectados actualmente en tu cuenta de Mastodon.
     platforms:
+      adobe_air: Adobe Air
+      android: Android
+      blackberry: Blackberry
+      chrome_os: ChromeOS
+      firefox_os: Firefox OS
+      ios: iOS
+      linux: GNU Linux
       mac: Mac
       other: Desconocido
     revoke: Revocar
@@ -1179,6 +1202,9 @@ es:
     webauthn_authentication: Claves de seguridad
   statuses:
     attached:
+      audio:
+        one: "%{count} audio"
+        other: "%{count} audios"
       description: 'Adjunto: %{attached}'
       image:
         one: "%{count} imagen"
@@ -1214,6 +1240,7 @@ es:
     show_older: Mostrar más antiguos
     show_thread: Mostrar discusión
     sign_in_to_participate: Regístrate para participar en la conversación
+    title: "%{name}: «%{quote}»"
     visibilities:
       direct: Directa
       private: Sólo mostrar a seguidores
