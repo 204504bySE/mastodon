@@ -1,7 +1,7 @@
 Authors
 =======
 
-Mastodon is available on [GitHub](https://github.com/tootsuite/mastodon)
+Mastodon is available on [GitHub](https://github.com/mastodon/mastodon)
 and provided thanks to the work of the following contributors:
 
 * [Gargron](https://github.com/Gargron)
@@ -723,7 +723,7 @@ and provided thanks to the work of the following contributors:
 * [西小倉宏信](mailto:nishiko@mindia.jp)
 * [雨宮美羽](mailto:k737566@gmail.com)
 
-This document is provided for informational purposes only. Since it is only updated once per release, the version you are looking at may be currently out of date. To see the full list of contributors, consider looking at the [git history](https://github.com/tootsuite/mastodon/graphs/contributors) instead.
+This document is provided for informational purposes only. Since it is only updated once per release, the version you are looking at may be currently out of date. To see the full list of contributors, consider looking at the [git history](https://github.com/mastodon/mastodon/graphs/contributors) instead.
 
 ## Translators
 
@@ -1062,10 +1062,6 @@ Following people have contributed to translation of Mastodon:
 - Vladislav Săcrieriu (vladislavs14) (*Romanian*)
 - danreznik (*Hebrew*)
 - rasheedgm (*Kannada*)
-- GatoOscuro (*Spanish*)
-- mecqor labi (mecqorlabi) (*Persian*)
-- Belkacem Mohammed (belkacem77) (*Kabyle*)
-- Navjot Singh (nspeaks) (*Hindi*)
 - omquylzu (*Latvian*)
 - c6ristian (*German*)
 - Belkacem Mohammed (belkacem77) (*Kabyle*)
@@ -1156,8 +1152,6 @@ Following people have contributed to translation of Mastodon:
 - eorn (*Breton*)
 - prabhjot (*Hindi*)
 - mmokhi (*Persian*)
-- Livingston Samuel (livingston) (*Tamil*)
-- prabhjot (*Hindi*)
 - sergioaraujo1 (*Portuguese, Brazilian*)
 - Entelekheia-ousia (*Chinese Simplified*)
 - Pierre Morvan (Iriep) (*Breton*)

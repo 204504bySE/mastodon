@@ -183,6 +183,26 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "9251d682c4e2840e1b2fea91e7d758efe2097ecb7f6255c065e3750d25eb178c",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/account.rb",
+      "line": 448,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "find_by_sql([\"        SELECT\\n          accounts.*,\\n          ts_rank_cd(#{textsearch}, #{query}, 32) AS rank\\n        FROM accounts\\n        WHERE #{query} @@ #{textsearch}\\n          AND accounts.suspended_at IS NULL\\n          AND accounts.moved_to_account_id IS NULL\\n        ORDER BY rank DESC\\n        LIMIT ? OFFSET ?\\n\".squish, limit, offset])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Account",
+        "method": "search_for"
+      },
+      "user_input": "textsearch",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "9ccb9ba6a6947400e187d515e0bf719d22993d37cfc123c824d7fafa6caa9ac3",
       "check_name": "SQL",
       "message": "Possible SQL injection",
