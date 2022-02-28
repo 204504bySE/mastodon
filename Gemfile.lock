@@ -600,7 +600,7 @@ GEM
     sshkit (1.21.2)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stackprof (0.2.17)
+    stackprof (0.2.19)
     statsd-ruby (1.5.0)
     stoplight (2.2.1)
     strong_migrations (0.7.6)
@@ -710,8 +710,8 @@ DEPENDENCIES
   dotenv-rails (~> 2.7)
   ed25519 (~> 1.2)
   fabrication (~> 2.22)
-  faraday
   faker (~> 2.18)
+  faraday
   fast_blank (~> 1.0)
   fastimage
   fog-core (<= 2.1.0)
