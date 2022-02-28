@@ -602,7 +602,7 @@ GEM
       net-ssh (>= 2.8.0)
     stackprof (0.2.17)
     statsd-ruby (1.5.0)
-    stoplight (2.2.1)
+    stoplight (3.0.0)
     strong_migrations (0.7.6)
       activerecord (>= 5)
     temple (0.8.2)
@@ -710,8 +710,8 @@ DEPENDENCIES
   dotenv-rails (~> 2.7)
   ed25519 (~> 1.2)
   fabrication (~> 2.22)
-  faraday
   faker (~> 2.18)
+  faraday
   fast_blank (~> 1.0)
   fastimage
   fog-core (<= 2.1.0)
@@ -791,7 +791,7 @@ DEPENDENCIES
   sprockets (~> 3.7.2)
   sprockets-rails (~> 3.2)
   stackprof
-  stoplight (~> 2.2.1)
+  stoplight (~> 3.0.0)
   strong_migrations (~> 0.7)
   thor (~> 1.1)
   tty-prompt (~> 0.23)
