@@ -1558,6 +1558,8 @@ ja:
     contrast: Mastodon (ハイコントラスト)
     default: Mastodon (ダーク)
     mastodon-light: Mastodon (ライト)
+    compact: コンパクト(ダーク)
+    compact-light: コンパクト(ライト)
   time:
     formats:
       default: "%Y年%m月%d日 %H:%M"

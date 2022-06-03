@@ -255,7 +255,7 @@ class Request
       def check_private_address(address)
         addr = IPAddr.new(address.to_s)
         return if private_address_exceptions.any? { |range| range.include?(addr) }
-        raise Mastodon::HostValidationError if PrivateAddressCheck.private_address?(addr)
+        #raise Mastodon::HostValidationError if PrivateAddressCheck.private_address?(addr)
       end
 
       def private_address_exceptions
