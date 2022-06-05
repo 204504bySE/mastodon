@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '>= 2.6.0', '< 3.1.0'
+ruby '>= 2.6.0'
 
 gem 'pkg-config', '~> 1.4'
 gem 'rexml', '~> 3.2'
@@ -91,8 +91,11 @@ gem 'tty-prompt', '~> 0.23', require: false
 gem 'twitter-text', '~> 3.1.0'
 gem 'tzinfo-data', '~> 1.2022'
 gem 'webpacker', '~> 5.4'
-gem 'webpush', '~> 0.3'
-gem 'webauthn', '~> 3.0.0.alpha1'
+gem 'webpush', git: 'https://github.com/ClearlyClaire/webpush.git', ref: 'f14a4d52e201128b1b00245d11b6de80d6cfdcd9'
+gem 'webauthn', git: 'https://github.com/ClearlyClaire/webauthn-ruby.git', ref: 'ba3028a0a773e5c248c230339d27db422a9e29f8'
+gem 'cose', git: 'https://github.com/ClearlyClaire/cose-ruby.git', ref: 'c36f4268c7e0f68bac25b8cf2bb7e7a37e0240a7'
+gem 'tpm-key_attestation', git: 'https://github.com/ClearlyClaire/tpm-key_attestation.git', ref: '1cd9826c9104d8547b3a8d808faa554a887ea2b2'
+gem 'openssl-signature_algorithm', git: 'https://github.com/ClearlyClaire/openssl-signature_algorithm.git', ref: '724f325b724b6e2a23ac0b5aa42fb36e3394109a'
 
 gem 'json-ld'
 gem 'json-ld-preloaded', '~> 3.2'
@@ -155,3 +158,8 @@ gem 'connection_pool', require: false
 
 gem 'xorcist', '~> 1.1'
 gem 'faraday' 
+
+gem 'net-imap'
+gem 'net-pop'
+gem 'net-smtp'
+gem 'psych', '~> 3.1'
