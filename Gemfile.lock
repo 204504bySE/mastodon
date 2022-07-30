@@ -79,7 +79,7 @@ GEM
       encryptor (~> 3.0.0)
     awrence (1.1.1)
     aws-eventstream (1.1.1)
-    aws-partitions (1.465.0)
+    aws-partitions (1.468.0)
     aws-sdk-core (3.114.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -710,8 +710,8 @@ DEPENDENCIES
   dotenv-rails (~> 2.7)
   ed25519 (~> 1.2)
   fabrication (~> 2.22)
-  faraday
   faker (~> 2.18)
+  faraday
   fast_blank (~> 1.0)
   fastimage
   fog-core (<= 2.1.0)
