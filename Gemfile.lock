@@ -1,13 +1,4 @@
 GIT
-  remote: https://github.com/ClearlyClaire/cose-ruby.git
-  revision: c36f4268c7e0f68bac25b8cf2bb7e7a37e0240a7
-  ref: c36f4268c7e0f68bac25b8cf2bb7e7a37e0240a7
-  specs:
-    cose (1.2.0)
-      cbor (~> 0.5.9)
-      openssl-signature_algorithm (~> 1.0)
-
-GIT
   remote: https://github.com/ClearlyClaire/openssl-signature_algorithm.git
   revision: 724f325b724b6e2a23ac0b5aa42fb36e3394109a
   ref: 724f325b724b6e2a23ac0b5aa42fb36e3394109a
@@ -218,6 +209,9 @@ GEM
     color_diff (0.1)
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
+    cose (1.2.1)
+      cbor (~> 0.5.9)
+      openssl-signature_algorithm (~> 1.0)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -797,7 +791,7 @@ DEPENDENCIES
   color_diff (~> 0.1)
   concurrent-ruby
   connection_pool
-  cose!
+  cose
   devise (~> 4.8)
   devise-two-factor (~> 4.0)
   devise_pam_authenticatable2 (~> 9.2)
