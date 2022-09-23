@@ -34,16 +34,12 @@ class StatusesIndex < Chewy::Index
           kuromoji_iteration_mark
         ),
         filter: %w(
-          english_possessive_stemmer
-          lowercase
-          asciifolding
-          kuromoji_stemmer
-          kuromoji_number
           kuromoji_baseform
-          icu_normalizer
+          kuromoji_part_of_speech
           cjk_width
-          english_stop
-          english_stemmer
+          ja_stop
+          kuromoji_stemmer
+          lowercase
         ),
       },
     },
