@@ -31,7 +31,7 @@ defaults: &defaults
   noindex: false
   theme: 'default'
   aggregate_reblogs: false
-  advanced_layout: true
+  advanced_layout: false
   use_blurhash: true
   use_pending_items: false
   trends: true
