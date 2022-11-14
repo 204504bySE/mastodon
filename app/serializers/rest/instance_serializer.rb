@@ -11,7 +11,8 @@ class REST::InstanceSerializer < ActiveModel::Serializer
 
   attributes :domain, :title, :version, :source_url, :description,
              :usage, :thumbnail, :languages, :configuration,
-             :registrations
+             :registrations,
+             :feature_quote
 
   has_one :contact, serializer: ContactSerializer
   has_many :rules, serializer: REST::RuleSerializer
@@ -86,6 +87,10 @@ class REST::InstanceSerializer < ActiveModel::Serializer
       approval_required: Setting.registrations_mode == 'approved',
       message: registrations_enabled? ? nil : registrations_message,
     }
+  end
+
+  def feature_quote
+    true
   end
 
   private
