@@ -52,13 +52,12 @@ sr-Latn:
         setting_display_media_default: Sakrij medije označene kao osetljive
         setting_display_media_hide_all: Uvek sakrij sve medije
         setting_display_media_show_all: Uvek prikaži medije označene kao osetljive
-        setting_hide_network: Koga pratite i ko vas prati neće biti prikazano na vašem nalogu
-        setting_noindex: Utiče na Vaš javni nalog i statusne strane
-        setting_show_application: Aplikacija koju koristiš za objavljivanje biće prikazana u detaljnom prikazu tvojih objava
-        setting_use_blurhash: Gradijent se zasniva na bojama skrivenih vizuelnih prikaza, ali prikriva sve detalje
-        setting_use_pending_items: Sakrij ažuriranja vremenske ose iza klika umesto automatskog pomeranja izvora objava
-        username: Vaš nadimak će biti jedinstven na %{domain}
-        whole_word: Kada je ključna reč ili fraza isključivo alfanumerička, biće primenjena samo ako se podudara sa celom reči
+        setting_hide_network: Koga pratite i ko Vas prati neće biti prikazano na Vašem profilu
+        setting_noindex: Utiče na Vaš javni profil i stranice sa objavama
+        setting_show_application: Aplikacija koju koristite za objavljivanje će biti prikazana u detaljnom prikazu vaših objava
+        setting_use_blurhash: Gradijenti se formiraju na osnovu bojâ skrivenih slika i zamućuju prikaz, prikrivajući detalje
+        setting_use_pending_items: Sakriva ažuriranja vremenske linije iza klika umesto automatskog ažuriranja i pomeranja vremenske linije
+        whole_word: Kada je ključna reč ili fraza isključivo alfanumerička, biće primenjena samo ako se podudara sa celom rečju
       domain_allow:
         domain: Ovaj domen će moći da preuzima podatke sa ovog servera i dolazni podaci sa njega će se obrađivati i čuvati
       email_domain_block:
