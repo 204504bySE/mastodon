@@ -161,3 +161,8 @@ gem 'cocoon', '~> 1.2'
 
 # https://qiita.com/Bjp8kHYYPFq8MrI/items/90a9db03160f8d6f7e5c
 gem 'psych', '~> 3.1'
+
+gem 'net-http', '~> 0.3.2'
+gem 'rubyzip', '~> 2.3'
+
+gem 'hcaptcha', '~> 7.1'
