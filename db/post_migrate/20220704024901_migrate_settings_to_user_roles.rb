@@ -11,8 +11,8 @@ class MigrateSettingsToUserRoles < ActiveRecord::Migration[6.1]
     moderator_role = UserRole.find_by(name: 'Moderator')
     everyone_role  = UserRole.find_by(id: -99)
 
-    min_invite_role  = Setting.min_invite_role
-    show_staff_badge = Setting.show_staff_badge
+    min_invite_role  = owner_role #Setting.min_invite_role
+    show_staff_badge = true #Setting.show_staff_badge
 
     if everyone_role
       everyone_role.permissions &= ~::UserRole::FLAGS[:invite_users] unless min_invite_role == 'user'

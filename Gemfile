@@ -158,3 +158,6 @@ gem 'concurrent-ruby', require: false
 gem 'connection_pool', require: false
 gem 'xorcist', '~> 1.1'
 gem 'cocoon', '~> 1.2'
+
+# https://qiita.com/Bjp8kHYYPFq8MrI/items/90a9db03160f8d6f7e5c
+gem 'psych', '~> 3.1'
