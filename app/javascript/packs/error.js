@@ -5,7 +5,7 @@ ready(() => {
   const image = document.querySelector('img');
 
   image.addEventListener('mouseenter', () => {
-    image.src = '/oops.gif';
+    image.src = '/oops2.png';
   });
 
   image.addEventListener('mouseleave', () => {

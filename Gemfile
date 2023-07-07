@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '>= 2.7.0', '< 3.1.0'
+ruby '>= 2.7.0', '< 3.2.0'
 
 gem 'pkg-config', '~> 1.5'
 gem 'rexml', '~> 3.2'
@@ -150,9 +150,9 @@ group :development do
   gem 'stackprof'
 end
 
-group :production do
+#group :production do
   gem 'lograge', '~> 0.12'
-end
+#end
 
 gem 'concurrent-ruby', require: false
 gem 'connection_pool', require: false
