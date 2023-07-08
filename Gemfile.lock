@@ -1,13 +1,4 @@
 GIT
-  remote: https://github.com/ClearlyClaire/cose-ruby.git
-  revision: c36f4268c7e0f68bac25b8cf2bb7e7a37e0240a7
-  ref: c36f4268c7e0f68bac25b8cf2bb7e7a37e0240a7
-  specs:
-    cose (1.2.0)
-      cbor (~> 0.5.9)
-      openssl-signature_algorithm (~> 1.0)
-
-GIT
   remote: https://github.com/ClearlyClaire/openssl-signature_algorithm.git
   revision: 724f325b724b6e2a23ac0b5aa42fb36e3394109a
   ref: 724f325b724b6e2a23ac0b5aa42fb36e3394109a
@@ -218,6 +209,9 @@ GEM
     color_diff (0.1)
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
+    cose (1.3.0)
+      cbor (~> 0.5.9)
+      openssl-signature_algorithm (~> 1.0)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -355,10 +349,10 @@ GEM
       rainbow (>= 2.0.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
-    i18n-tasks (1.0.10)
+    i18n-tasks (1.0.12)
       activesupport (>= 4.0.2)
       ast (>= 2.1.0)
-      better_html (~> 1.0)
+      better_html (>= 1.0, < 3.0)
       erubi
       highline (>= 2.0.0)
       i18n
@@ -436,7 +430,7 @@ GEM
     matrix (0.4.2)
     memory_profiler (1.0.0)
     method_source (1.0.0)
-    microformats (4.3.1)
+    microformats (4.4.1)
       json (~> 2.2)
       nokogiri (~> 1.10)
     mime-types (3.4.1)
@@ -444,7 +438,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.15.0)
+    minitest (5.16.3)
     msgpack (1.5.1)
     multi_json (1.15.0)
     multipart-post (2.1.1)
@@ -467,7 +461,7 @@ GEM
       timeout
     net-ssh (6.1.0)
     nio4r (2.5.8)
-    nokogiri (1.13.6)
+    nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     nsa (0.2.8)
@@ -499,7 +493,7 @@ GEM
       validate_email
       validate_url
       webfinger (>= 1.0.1)
-    openssl (3.0.0)
+    openssl (3.0.1)
     orm_adapter (0.5.0)
     ox (2.14.11)
     parallel (1.22.1)
@@ -531,13 +525,13 @@ GEM
       pry (>= 0.10.4)
     psych (3.3.4)
     public_suffix (4.0.7)
-    puma (5.6.4)
+    puma (5.6.5)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.4)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
     rack-cors (1.1.1)
@@ -611,7 +605,7 @@ GEM
     rqrcode_core (1.2.0)
     rspec-core (3.11.0)
       rspec-support (~> 3.11.0)
-    rspec-expectations (3.11.0)
+    rspec-expectations (3.11.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-mocks (3.11.1)
@@ -651,7 +645,7 @@ GEM
       nokogiri (>= 1.10.5)
       rexml
     ruby2_keywords (0.0.5)
-    rufus-scheduler (3.8.1)
+    rufus-scheduler (3.8.2)
       fugit (~> 1.1, >= 1.1.6)
     safety_net_attestation (0.4.0)
       jwt (~> 2.0)
@@ -668,10 +662,10 @@ GEM
       redis (>= 4.2.0)
     sidekiq-bulk (0.2.0)
       sidekiq
-    sidekiq-scheduler (4.0.0)
+    sidekiq-scheduler (4.0.3)
       redis (>= 4.2.0)
       rufus-scheduler (~> 3.2)
-      sidekiq (>= 4)
+      sidekiq (>= 4, < 7)
       tilt (>= 1.4.0)
     sidekiq-unique-jobs (7.1.22)
       brpoplpush-redis_script (> 0.1.1, <= 2.0.0)
@@ -733,7 +727,7 @@ GEM
       unf (~> 0.1.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2022.1)
+    tzinfo-data (1.2022.6)
       tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
@@ -797,7 +791,7 @@ DEPENDENCIES
   color_diff (~> 0.1)
   concurrent-ruby
   connection_pool
-  cose!
+  cose
   devise (~> 4.8)
   devise-two-factor (~> 4.0)
   devise_pam_authenticatable2 (~> 9.2)
