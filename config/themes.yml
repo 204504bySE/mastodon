@@ -1,3 +1,9 @@
 default: styles/application.scss
 contrast: styles/contrast.scss
 mastodon-light: styles/mastodon-light.scss
+compact: styles/compact.scss
+compact-light: styles/compact-light.scss
+compact2: styles/compact2.scss
+compact2-light: styles/compact2-light.scss
+twitama: styles/twitama.scss
+twitama-dark: styles/twitama-dark.scss

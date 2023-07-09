@@ -1,0 +1,19 @@
+// nomargin.scss
+.status {
+    padding: 0;
+}
+.notification__report {
+    padding: 0   
+}
+.status__info {
+    margin-bottom: 0;
+}
+.status__prepend, .notification__message {
+    padding: 1px 0 0;
+}
+.status__wrapper--filtered {
+    margin: 0;
+}
+.status .attachment-list, .status .audio-player, .status .media-gallery, .status .video-player {
+    margin-top: 0 !important;
+}

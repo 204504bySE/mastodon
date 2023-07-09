@@ -1,0 +1,50 @@
+// twitama.scss
+// compact + nomargin + (this)
+
+//名前とアカウント名を同じ行にする
+.status__prepend {
+    margin-left: 22px;
+}
+.status__relative-time {
+    height: unset;
+}
+.display-name__account {
+    display: inline !important;
+}
+
+//アイコンの大きさと位置をなんとかする
+.account__avatar {
+    border-radius: 0;
+}
+a .account__avatar {
+    width: 22px !important;
+    height: 22px !important;
+}
+.status__avatar {
+    width: 22px;
+    height: 22px;
+}
+.account__avatar-overlay {
+    position: unset;
+}
+.account__avatar-overlay-overlay {
+    right: unset;
+    bottom: unset;
+    top: 0;
+}
+.notification .account__avatar-overlay-overlay {
+    top: -24px;
+}
+.notification-admin-report .account__avatar-overlay-overlay {
+    top: 22px;
+    left: 0;
+}
+.account__header .account__avatar {
+    width: 90px !important;
+    height: 90px !important;
+}
+
+.navigation-bar .account__avatar {
+    width: 46px !important;
+    height: 46px !important;
+}
