@@ -4,6 +4,7 @@
 //名前とアカウント名を同じ行にする
 .status__prepend {
     margin-left: 22px;
+    gap: 0;
 }
 .status__relative-time {
     height: unset;
