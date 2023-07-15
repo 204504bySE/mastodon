@@ -1,0 +1,6 @@
+//全テーマ共通の不具合修正
+
+//ホームTLのBTアイコン等が出ないのを直す
+.status__prepend-icon-wrapper {
+    position: unset;
+}
