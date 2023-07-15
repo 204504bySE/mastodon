@@ -16,7 +16,7 @@
 .account__avatar {
     border-radius: 0;
 }
-a .account__avatar {
+.status__avatar .account__avatar {
     width: 22px !important;
     height: 22px !important;
 }
@@ -38,13 +38,4 @@ a .account__avatar {
 .notification-admin-report .account__avatar-overlay-overlay {
     top: 22px;
     left: 0;
-}
-.account__header .account__avatar {
-    width: 90px !important;
-    height: 90px !important;
-}
-
-.navigation-bar .account__avatar {
-    width: 46px !important;
-    height: 46px !important;
 }
