@@ -62,13 +62,13 @@ class MediaAttachment < ApplicationRecord
   AUDIO_MIME_TYPES             = %w(audio/wave audio/wav audio/x-wav audio/x-pn-wave audio/vnd.wave audio/ogg audio/vorbis audio/mpeg audio/mp3 audio/webm audio/flac audio/aac audio/m4a audio/x-m4a audio/mp4 audio/3gpp video/x-ms-asf).freeze
 
   BLURHASH_OPTIONS = {
-    x_comp: 4,
-    y_comp: 4,
+    x_comp: 9,
+    y_comp: 9,
   }.freeze
 
   IMAGE_STYLES = {
     original: {
-      pixels: 2_073_600, # 1920x1080px
+      pixels: 16777216, # 4096x4096px
       file_geometry_parser: FastGeometryParser,
     }.freeze,
 
@@ -106,7 +106,8 @@ class MediaAttachment < ApplicationRecord
         'bufsize' => '1300K',
         'b:v' => '1300K',
         'frames:v' => 60 * 60 * 3,
-        'crf' => 18,
+        'qpmin' => '18',
+        'crf' => 22,
         'map_metadata' => '-1',
       }.freeze,
     }.freeze,
