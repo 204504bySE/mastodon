@@ -41,8 +41,8 @@ class MediaAttachment < ApplicationRecord
   IMAGE_LIMIT = 40.megabytes
   VIDEO_LIMIT = 1000.megabytes
 
-  MAX_VIDEO_MATRIX_LIMIT = 2_304_000 # 1920x1200px
-  MAX_VIDEO_FRAME_RATE   = 60
+  MAX_VIDEO_MATRIX_LIMIT = 16_777_216 # 4096x4096px
+  MAX_VIDEO_FRAME_RATE   = 144
 
   IMAGE_FILE_EXTENSIONS = %w(.jpg .jpeg .png .gif .webp .heic .heif .avif).freeze
   VIDEO_FILE_EXTENSIONS = %w(.webm .mp4 .m4v .mov).freeze
@@ -106,7 +106,7 @@ class MediaAttachment < ApplicationRecord
         'bufsize' => '1300K',
         'b:v' => '1300K',
         #'frames:v' => 60 * 60 * 3,
-        'qpmin' => '18',
+        'x264opts' => 'qpmin=18',
         'crf' => 22,
         'map_metadata' => '-1',
       }.freeze,
@@ -170,7 +170,7 @@ class MediaAttachment < ApplicationRecord
   }.freeze
 
   GLOBAL_CONVERT_OPTIONS = {
-    all: '-quality 90 +profile "!icc,*" +set date:modify +set date:create +set date:timestamp',
+    all: '-quality 90 +profile "!icc,*" +set modify-date +set create-date',
   }.freeze
 
   belongs_to :account,          inverse_of: :media_attachments, optional: true
