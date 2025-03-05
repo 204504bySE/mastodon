@@ -89,6 +89,8 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
         @status = nil
         raise ActiveRecord::Rollback
       end
+      
+      attach_mentions(@status)
     end
 
     return if @status.nil?
@@ -197,6 +199,15 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     # not a big deal
     Trends.tags.register(status)
 
+    # Update featured tags
+    return if @tags.empty? || !status.distributable?
+
+    @account.featured_tags.where(tag_id: @tags.pluck(:id)).find_each do |featured_tag|
+      featured_tag.increment(status.created_at)
+    end
+  end
+
+  def attach_mentions(status)
     @mentions.each do |mention|
       mention.status = status
       mention.save
