@@ -8,6 +8,8 @@ class ActivityPub::Parser::StatusParser
 
   NORMALIZED_LOCALE_NAMES = LanguagesHelper::SUPPORTED_LOCALES.keys.index_by(&:downcase).freeze
 
+  NORMALIZED_LOCALE_NAMES = LanguagesHelper::SUPPORTED_LOCALES.keys.index_by(&:downcase).freeze
+
   # @param [Hash] json
   # @param [Hash] magic_values
   # @option magic_values [String] :followers_collection
