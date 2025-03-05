@@ -15,10 +15,7 @@ const WebSocket = require('ws');
 const { JSDOM } = require('jsdom');
 
 const env = process.env.NODE_ENV || 'development';
-const alwaysRequireAuth =
-  process.env.LIMITED_FEDERATION_MODE === 'true' ||
-  process.env.WHITELIST_MODE === 'true' ||
-  process.env.AUTHORIZED_FETCH === 'true';
+const alwaysRequireAuth = process.env.LIMITED_FEDERATION_MODE === 'true' || process.env.WHITELIST_MODE === 'true' || process.env.AUTHORIZED_FETCH === 'true';
 
 dotenv.config({
   path: env === 'production' ? '.env.production' : '.env',
@@ -56,7 +53,7 @@ const dbUrlToConfig = (dbUrl) => {
 
   const ssl = params.query && params.query.ssl;
 
-  if ((ssl && ssl === 'true') || ssl === '1') {
+  if (ssl && ssl === 'true' || ssl === '1') {
     config.ssl = true;
   }
 
@@ -75,19 +72,15 @@ const redisUrlToClient = async (defaultConfig, redisUrl) => {
   if (!redisUrl) {
     client = redis.createClient(config);
   } else if (redisUrl.startsWith('unix://')) {
-    client = redis.createClient(
-      Object.assign(config, {
-        socket: {
-          path: redisUrl.slice(7),
-        },
-      })
-    );
+    client = redis.createClient(Object.assign(config, {
+      socket: {
+        path: redisUrl.slice(7),
+      },
+    }));
   } else {
-    client = redis.createClient(
-      Object.assign(config, {
-        url: redisUrl,
-      })
-    );
+    client = redis.createClient(Object.assign(config, {
+      url: redisUrl,
+    }));
   }
 
   client.on('error', (err) => log.error('Redis Client Error!', err));
@@ -96,9 +89,7 @@ const redisUrlToClient = async (defaultConfig, redisUrl) => {
   return client;
 };
 
-const numWorkers =
-  +process.env.STREAMING_CLUSTER_NUM ||
-  (env === 'development' ? 1 : Math.max(os.cpus().length - 1, 1));
+const numWorkers = +process.env.STREAMING_CLUSTER_NUM || (env === 'development' ? 1 : Math.max(os.cpus().length - 1, 1));
 
 /**
  * Attempts to safely parse a string as JSON, used when both receiving a message
@@ -133,9 +124,7 @@ const parseJSON = (json, req) => {
 
 const startMaster = () => {
   if (!process.env.SOCKET && process.env.PORT && isNaN(+process.env.PORT)) {
-    log.warn(
-      'UNIX domain socket is now supported by using SOCKET. Please migrate from PORT hack.'
-    );
+    log.warn('UNIX domain socket is now supported by using SOCKET. Please migrate from PORT hack.');
   }
 
   log.warn(`Starting streaming API server master with ${numWorkers} workers`);
@@ -146,38 +135,31 @@ const startWorker = async (workerId) => {
 
   const pgConfigs = {
     development: {
-      user: process.env.DB_USER || pg.defaults.user,
+      user:     process.env.DB_USER || pg.defaults.user,
       password: process.env.DB_PASS || pg.defaults.password,
       database: process.env.DB_NAME || 'mastodon_development',
-      host: process.env.DB_HOST || pg.defaults.host,
-      port: process.env.DB_PORT || pg.defaults.port,
+      host:     process.env.DB_HOST || pg.defaults.host,
+      port:     process.env.DB_PORT || pg.defaults.port,
     },
 
     production: {
-      user: process.env.DB_USER || 'mastodon',
+      user:     process.env.DB_USER || 'mastodon',
       password: process.env.DB_PASS || '',
       database: process.env.DB_NAME || 'mastodon_production',
-      host: process.env.DB_HOST || 'localhost',
-      port: process.env.DB_PORT || 5432,
+      host:     process.env.DB_HOST || 'localhost',
+      port:     process.env.DB_PORT || 5432,
     },
   };
 
   const app = express();
 
-  app.set(
-    'trust proxy',
-    process.env.TRUSTED_PROXY_IP
-      ? process.env.TRUSTED_PROXY_IP.split(/(?:\s*,\s*|\s+)/)
-      : 'loopback,uniquelocal'
-  );
+  app.set('trust proxy', process.env.TRUSTED_PROXY_IP ? process.env.TRUSTED_PROXY_IP.split(/(?:\s*,\s*|\s+)/) : 'loopback,uniquelocal');
 
-  const pgPool = new pg.Pool(
-    Object.assign(pgConfigs[env], dbUrlToConfig(process.env.DATABASE_URL), {
-      max: process.env.DB_POOL || 10,
-      connectionTimeoutMillis: 15000,
-      ssl: !!process.env.DB_SSLMODE && process.env.DB_SSLMODE !== 'disable',
-    })
-  );
+  const pgPool = new pg.Pool(Object.assign(pgConfigs[env], dbUrlToConfig(process.env.DATABASE_URL), {
+    max: process.env.DB_POOL || 10,
+    connectionTimeoutMillis: 15000,
+    ssl: !!process.env.DB_SSLMODE && process.env.DB_SSLMODE !== 'disable',
+  }));
 
   const server = http.createServer(app);
   const redisNamespace = process.env.REDIS_NAMESPACE || null;
@@ -202,31 +184,18 @@ const startWorker = async (workerId) => {
    */
   const subs = {};
 
-  const redisSubscribeClient = await redisUrlToClient(
-    redisParams,
-    process.env.REDIS_URL
-  );
-  const redisClient = await redisUrlToClient(
-    redisParams,
-    process.env.REDIS_URL
-  );
+  const redisSubscribeClient = await redisUrlToClient(redisParams, process.env.REDIS_URL);
+  const redisClient = await redisUrlToClient(redisParams, process.env.REDIS_URL);
 
   /**
    * @param {string[]} channels
    * @return {function(): void}
    */
-  const subscriptionHeartbeat = (channels) => {
+  const subscriptionHeartbeat = channels => {
     const interval = 6 * 60;
 
     const tellSubscribed = () => {
-      channels.forEach((channel) =>
-        redisClient.set(
-          `${redisPrefix}subscribed:${channel}`,
-          '1',
-          'EX',
-          interval * 3
-        )
-      );
+      channels.forEach(channel => redisClient.set(`${redisPrefix}subscribed:${channel}`, '1', 'EX', interval * 3));
     };
 
     tellSubscribed();
@@ -291,7 +260,7 @@ const startWorker = async (workerId) => {
       return;
     }
 
-    subs[channel] = subs[channel].filter((item) => item !== callback);
+    subs[channel] = subs[channel].filter(item => item !== callback);
 
     if (subs[channel].length === 0) {
       log.verbose(`Unsubscribe ${channel}`);
@@ -316,7 +285,8 @@ const startWorker = async (workerId) => {
    * @param {any} value
    * @return {boolean}
    */
-  const isTruthy = (value) => value && !FALSE_VALUES.includes(value);
+  const isTruthy = value =>
+    value && !FALSE_VALUES.includes(value);
 
   /**
    * @param {any} req
@@ -325,10 +295,7 @@ const startWorker = async (workerId) => {
    */
   const allowCrossDomain = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header(
-      'Access-Control-Allow-Headers',
-      'Authorization, Accept, Cache-Control'
-    );
+    res.header('Access-Control-Allow-Headers', 'Authorization, Accept, Cache-Control');
     res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 
     next();
@@ -363,113 +330,104 @@ const startWorker = async (workerId) => {
    * @return {boolean}
    */
   const isInScope = (req, necessaryScopes) =>
-    req.scopes.some((scope) => necessaryScopes.includes(scope));
+    req.scopes.some(scope => necessaryScopes.includes(scope));
 
   /**
    * @param {string} token
    * @param {any} req
    * @return {Promise.<void>}
    */
-  const accountFromToken = (token, req) =>
-    new Promise((resolve, reject) => {
-      pgPool.connect((err, client, done) => {
+  const accountFromToken = (token, req) => new Promise((resolve, reject) => {
+    pgPool.connect((err, client, done) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      client.query('SELECT oauth_access_tokens.id, oauth_access_tokens.resource_owner_id, users.account_id, users.chosen_languages, oauth_access_tokens.scopes, devices.device_id FROM oauth_access_tokens INNER JOIN users ON oauth_access_tokens.resource_owner_id = users.id LEFT OUTER JOIN devices ON oauth_access_tokens.id = devices.access_token_id WHERE oauth_access_tokens.token = $1 AND oauth_access_tokens.revoked_at IS NULL LIMIT 1', [token], (err, result) => {
+        done();
+
         if (err) {
           reject(err);
           return;
         }
 
-        client.query(
-          'SELECT oauth_access_tokens.id, oauth_access_tokens.resource_owner_id, users.account_id, users.chosen_languages, oauth_access_tokens.scopes, devices.device_id FROM oauth_access_tokens INNER JOIN users ON oauth_access_tokens.resource_owner_id = users.id LEFT OUTER JOIN devices ON oauth_access_tokens.id = devices.access_token_id WHERE oauth_access_tokens.token = $1 AND oauth_access_tokens.revoked_at IS NULL LIMIT 1',
-          [token],
-          (err, result) => {
-            done();
+        if (result.rows.length === 0) {
+          err = new Error('Invalid access token');
+          err.status = 401;
 
-            if (err) {
-              reject(err);
-              return;
-            }
+          reject(err);
+          return;
+        }
 
-            if (result.rows.length === 0) {
-              err = new Error('Invalid access token');
-              err.status = 401;
+        req.accessTokenId = result.rows[0].id;
+        req.scopes = result.rows[0].scopes.split(' ');
+        req.accountId = result.rows[0].account_id;
+        req.chosenLanguages = result.rows[0].chosen_languages;
+        req.deviceId = result.rows[0].device_id;
 
-              reject(err);
-              return;
-            }
-
-            req.accessTokenId = result.rows[0].id;
-            req.scopes = result.rows[0].scopes.split(' ');
-            req.accountId = result.rows[0].account_id;
-            req.chosenLanguages = result.rows[0].chosen_languages;
-            req.deviceId = result.rows[0].device_id;
-
-            resolve();
-          }
-        );
+        resolve();
       });
     });
+  });
 
   /**
    * @param {any} req
    * @param {boolean=} required
    * @return {Promise.<void>}
    */
-  const accountFromRequest = (req, required = true) =>
-    new Promise((resolve, reject) => {
-      const authorization = req.headers.authorization;
-      const location = url.parse(req.url, true);
-      const accessToken =
-        location.query.access_token || req.headers['sec-websocket-protocol'];
+  const accountFromRequest = (req, required = true) => new Promise((resolve, reject) => {
+    const authorization = req.headers.authorization;
+    const location      = url.parse(req.url, true);
+    const accessToken   = location.query.access_token || req.headers['sec-websocket-protocol'];
 
-      if (!authorization && !accessToken) {
-        if (required) {
-          const err = new Error('Missing access token');
-          err.status = 401;
+    if (!authorization && !accessToken) {
+      if (required) {
+        const err = new Error('Missing access token');
+        err.status = 401;
 
-          reject(err);
-          return;
-        } else {
-          resolve();
-          return;
-        }
+        reject(err);
+        return;
+      } else {
+        resolve();
+        return;
       }
+    }
 
-      const token = authorization
-        ? authorization.replace(/^Bearer /, '')
-        : accessToken;
+    const token = authorization ? authorization.replace(/^Bearer /, '') : accessToken;
 
-      resolve(accountFromToken(token, req));
-    });
+    resolve(accountFromToken(token, req));
+  });
 
   /**
    * @param {any} req
    * @returns {string|undefined}
    */
-  const channelNameFromPath = (req) => {
+  const channelNameFromPath = req => {
     const { path, query } = req;
     const onlyMedia = isTruthy(query.only_media);
 
     switch (path) {
-      case '/api/v1/streaming/user':
-        return 'user';
-      case '/api/v1/streaming/user/notification':
-        return 'user:notification';
-      case '/api/v1/streaming/public':
-        return onlyMedia ? 'public:media' : 'public';
-      case '/api/v1/streaming/public/local':
-        return onlyMedia ? 'public:local:media' : 'public:local';
-      case '/api/v1/streaming/public/remote':
-        return onlyMedia ? 'public:remote:media' : 'public:remote';
-      case '/api/v1/streaming/hashtag':
-        return 'hashtag';
-      case '/api/v1/streaming/hashtag/local':
-        return 'hashtag:local';
-      case '/api/v1/streaming/direct':
-        return 'direct';
-      case '/api/v1/streaming/list':
-        return 'list';
-      default:
-        return undefined;
+    case '/api/v1/streaming/user':
+      return 'user';
+    case '/api/v1/streaming/user/notification':
+      return 'user:notification';
+    case '/api/v1/streaming/public':
+      return onlyMedia ? 'public:media' : 'public';
+    case '/api/v1/streaming/public/local':
+      return onlyMedia ? 'public:local:media' : 'public:local';
+    case '/api/v1/streaming/public/remote':
+      return onlyMedia ? 'public:remote:media' : 'public:remote';
+    case '/api/v1/streaming/hashtag':
+      return 'hashtag';
+    case '/api/v1/streaming/hashtag/local':
+      return 'hashtag:local';
+    case '/api/v1/streaming/direct':
+      return 'direct';
+    case '/api/v1/streaming/list':
+      return 'list';
+    default:
+      return undefined;
     }
   };
 
@@ -489,47 +447,41 @@ const startWorker = async (workerId) => {
    * @param {string} channelName
    * @return {Promise.<void>}
    */
-  const checkScopes = (req, channelName) =>
-    new Promise((resolve, reject) => {
-      log.silly(req.requestId, `Checking OAuth scopes for ${channelName}`);
+  const checkScopes = (req, channelName) => new Promise((resolve, reject) => {
+    log.silly(req.requestId, `Checking OAuth scopes for ${channelName}`);
 
-      // When accessing public channels, no scopes are needed
-      if (PUBLIC_CHANNELS.includes(channelName)) {
-        resolve();
-        return;
-      }
+    // When accessing public channels, no scopes are needed
+    if (PUBLIC_CHANNELS.includes(channelName)) {
+      resolve();
+      return;
+    }
 
-      // The `read` scope has the highest priority, if the token has it
-      // then it can access all streams
-      const requiredScopes = ['read'];
+    // The `read` scope has the highest priority, if the token has it
+    // then it can access all streams
+    const requiredScopes = ['read'];
 
-      // When accessing specifically the notifications stream,
-      // we need a read:notifications, while in all other cases,
-      // we can allow access with read:statuses. Mind that the
-      // user stream will not contain notifications unless
-      // the token has either read or read:notifications scope
-      // as well, this is handled separately.
-      if (channelName === 'user:notification') {
-        requiredScopes.push('read:notifications');
-      } else {
-        requiredScopes.push('read:statuses');
-      }
+    // When accessing specifically the notifications stream,
+    // we need a read:notifications, while in all other cases,
+    // we can allow access with read:statuses. Mind that the
+    // user stream will not contain notifications unless
+    // the token has either read or read:notifications scope
+    // as well, this is handled separately.
+    if (channelName === 'user:notification') {
+      requiredScopes.push('read:notifications');
+    } else {
+      requiredScopes.push('read:statuses');
+    }
 
-      if (
-        req.scopes &&
-        requiredScopes.some((requiredScope) =>
-          req.scopes.includes(requiredScope)
-        )
-      ) {
-        resolve();
-        return;
-      }
+    if (req.scopes && requiredScopes.some(requiredScope => req.scopes.includes(requiredScope))) {
+      resolve();
+      return;
+    }
 
-      const err = new Error('Access token does not cover required scopes');
-      err.status = 401;
+    const err = new Error('Access token does not cover required scopes');
+    err.status = 401;
 
-      reject(err);
-    });
+    reject(err);
+  });
 
   /**
    * @param {any} info
@@ -542,14 +494,12 @@ const startWorker = async (workerId) => {
     // variables. OAuth scope checks are moved to the point of subscription
     // to a specific stream.
 
-    accountFromRequest(info.req, alwaysRequireAuth)
-      .then(() => {
-        callback(true, undefined, undefined);
-      })
-      .catch((err) => {
-        log.error(info.req.requestId, err.toString());
-        callback(false, 401, 'Unauthorized');
-      });
+    accountFromRequest(info.req, alwaysRequireAuth).then(() => {
+      callback(true, undefined, undefined);
+    }).catch(err => {
+      log.error(info.req.requestId, err.toString());
+      callback(false, 401, 'Unauthorized');
+    });
   };
 
   /**
@@ -569,16 +519,10 @@ const startWorker = async (workerId) => {
       log.silly(req.requestId, `System message for ${req.accountId}: ${event}`);
 
       if (event === 'kill') {
-        log.verbose(
-          req.requestId,
-          `Closing connection for ${req.accountId} due to expired access token`
-        );
+        log.verbose(req.requestId, `Closing connection for ${req.accountId} due to expired access token`);
         eventHandlers.onKill();
       } else if (event === 'filters_changed') {
-        log.verbose(
-          req.requestId,
-          `Invalidating filters cache for ${req.accountId}`
-        );
+        log.verbose(req.requestId, `Invalidating filters cache for ${req.accountId}`);
         req.cachedFilters = null;
       }
     };
@@ -593,9 +537,11 @@ const startWorker = async (workerId) => {
     const systemChannelId = `timeline:system:${req.accountId}`;
 
     const listener = createSystemMessageListener(req, {
+
       onKill() {
         res.end();
       },
+
     });
 
     res.on('close', () => {
@@ -618,17 +564,13 @@ const startWorker = async (workerId) => {
       return;
     }
 
-    accountFromRequest(req, alwaysRequireAuth)
-      .then(() => checkScopes(req, channelNameFromPath(req)))
-      .then(() => {
-        subscribeHttpToSystemChannel(req, res);
-      })
-      .then(() => {
-        next();
-      })
-      .catch((err) => {
-        next(err);
-      });
+    accountFromRequest(req, alwaysRequireAuth).then(() => checkScopes(req, channelNameFromPath(req))).then(() => {
+      subscribeHttpToSystemChannel(req, res);
+    }).then(() => {
+      next();
+    }).catch(err => {
+      next(err);
+    });
   };
 
   /**
@@ -646,11 +588,7 @@ const startWorker = async (workerId) => {
     }
 
     res.writeHead(err.status || 500, { 'Content-Type': 'application/json' });
-    res.end(
-      JSON.stringify({
-        error: err.status ? err.toString() : 'An unexpected error occurred',
-      })
-    );
+    res.end(JSON.stringify({ error: err.status ? err.toString() : 'An unexpected error occurred' }));
   };
 
   /**
@@ -658,44 +596,34 @@ const startWorker = async (workerId) => {
    * @param {number=} shift
    * @return {string}
    */
-  const placeholders = (arr, shift = 0) =>
-    arr.map((_, i) => `$${i + 1 + shift}`).join(', ');
+  const placeholders = (arr, shift = 0) => arr.map((_, i) => `$${i + 1 + shift}`).join(', ');
 
   /**
    * @param {string} listId
    * @param {any} req
    * @return {Promise.<void>}
    */
-  const authorizeListAccess = (listId, req) =>
-    new Promise((resolve, reject) => {
-      const { accountId } = req;
+  const authorizeListAccess = (listId, req) => new Promise((resolve, reject) => {
+    const { accountId } = req;
 
-      pgPool.connect((err, client, done) => {
-        if (err) {
+    pgPool.connect((err, client, done) => {
+      if (err) {
+        reject();
+        return;
+      }
+
+      client.query('SELECT id, account_id FROM lists WHERE id = $1 LIMIT 1', [listId], (err, result) => {
+        done();
+
+        if (err || result.rows.length === 0 || result.rows[0].account_id !== accountId) {
           reject();
           return;
         }
 
-        client.query(
-          'SELECT id, account_id FROM lists WHERE id = $1 LIMIT 1',
-          [listId],
-          (err, result) => {
-            done();
-
-            if (
-              err ||
-              result.rows.length === 0 ||
-              result.rows[0].account_id !== accountId
-            ) {
-              reject();
-              return;
-            }
-
-            resolve();
-          }
-        );
+        resolve();
       });
     });
+  });
 
   /**
    * @param {string[]} ids
@@ -705,19 +633,10 @@ const startWorker = async (workerId) => {
    * @param {boolean=} needsFiltering
    * @returns {SubscriptionListener}
    */
-  const streamFrom = (
-    ids,
-    req,
-    output,
-    attachCloseHandler,
-    needsFiltering = false
-  ) => {
+  const streamFrom = (ids, req, output, attachCloseHandler, needsFiltering = false) => {
     const accountId = req.accountId || req.remoteAddress;
 
-    log.verbose(
-      req.requestId,
-      `Starting stream from ${ids.join(', ')} for ${accountId}`
-    );
+    log.verbose(req.requestId, `Starting stream from ${ids.join(', ')} for ${accountId}`);
 
     const transmit = (event, payload) => {
       // TODO: Replace "string"-based delete payloads with object payloads:
@@ -776,13 +695,9 @@ const startWorker = async (workerId) => {
         }
 
         const queries = [
-          client.query(
-            `SELECT 1
+          client.query(`SELECT 1
                         FROM blocks
-                        WHERE (account_id = $1 AND target_account_id IN (${placeholders(
-                          targetAccountIds,
-                          2
-                        )}))
+                        WHERE (account_id = $1 AND target_account_id IN (${placeholders(targetAccountIds, 2)}))
                            OR (account_id = $2 AND target_account_id = $1)
                         UNION
                         SELECT 1
@@ -792,12 +707,7 @@ const startWorker = async (workerId) => {
         ];
 
         if (accountDomain) {
-          queries.push(
-            client.query(
-              'SELECT 1 FROM account_domain_blocks WHERE account_id = $1 AND domain = $2',
-              [req.accountId, accountDomain]
-            )
-          );
+          queries.push(client.query('SELECT 1 FROM account_domain_blocks WHERE account_id = $1 AND domain = $2', [req.accountId, accountDomain]));
         }
 
         if (!payload.filtered && !req.cachedFilters) {
@@ -869,8 +779,10 @@ const startWorker = async (workerId) => {
                   }
                 }
 
-                return cache;
-              }, {});
+                return expr;
+              }).join('|'), 'i');
+            });
+          }
 
           // Apply cachedFilters against the payload, constructing a
           // `filter_results` array of FilterResult entities
@@ -928,7 +840,7 @@ const startWorker = async (workerId) => {
       });
     };
 
-    ids.forEach((id) => {
+    ids.forEach(id => {
       subscribe(`${redisPrefix}${id}`, listener);
     });
 
@@ -978,19 +890,11 @@ const startWorker = async (workerId) => {
         unsubscribe(id, listener);
       });
 
-  const streamHttpEnd =
-    (req, closeHandler = undefined) =>
-    (ids, listener) => {
-      req.on('close', () => {
-        ids.forEach((id) => {
-          unsubscribe(id, listener);
-        });
-
-        if (closeHandler) {
-          closeHandler();
-        }
-      });
-    };
+      if (closeHandler) {
+        closeHandler();
+      }
+    });
+  };
 
   /**
    * @param {any} req
@@ -1010,7 +914,7 @@ const startWorker = async (workerId) => {
   /**
    * @param {any} res
    */
-  const httpNotFound = (res) => {
+  const httpNotFound = res => {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Not found' }));
   };
@@ -1024,57 +928,40 @@ const startWorker = async (workerId) => {
     res.end('OK');
   });
 
-  app.get('/metrics', (req, res) =>
-    server.getConnections((err, count) => {
-      res.writeHeader(200, {
-        'Content-Type':
-          'application/openmetrics-text; version=1.0.0; charset=utf-8',
-      });
-      res.write('# TYPE connected_clients gauge\n');
-      res.write(
-        '# HELP connected_clients The number of clients connected to the streaming server\n'
-      );
-      res.write(`connected_clients ${count}.0\n`);
-      res.write('# TYPE connected_channels gauge\n');
-      res.write(
-        '# HELP connected_channels The number of Redis channels the streaming server is subscribed to\n'
-      );
-      res.write(`connected_channels ${Object.keys(subs).length}.0\n`);
-      res.write('# TYPE pg_pool_total_connections gauge\n');
-      res.write(
-        '# HELP pg_pool_total_connections The total number of clients existing within the pool\n'
-      );
-      res.write(`pg_pool_total_connections ${pgPool.totalCount}.0\n`);
-      res.write('# TYPE pg_pool_idle_connections gauge\n');
-      res.write(
-        '# HELP pg_pool_idle_connections The number of clients which are not checked out but are currently idle in the pool\n'
-      );
-      res.write(`pg_pool_idle_connections ${pgPool.idleCount}.0\n`);
-      res.write('# TYPE pg_pool_waiting_queries gauge\n');
-      res.write(
-        '# HELP pg_pool_waiting_queries The number of queued requests waiting on a client when all clients are checked out\n'
-      );
-      res.write(`pg_pool_waiting_queries ${pgPool.waitingCount}.0\n`);
-      res.write('# EOF\n');
-      res.end();
-    })
-  );
+  app.get('/metrics', (req, res) => server.getConnections((err, count) => {
+    res.writeHeader(200, { 'Content-Type': 'application/openmetrics-text; version=1.0.0; charset=utf-8' });
+    res.write('# TYPE connected_clients gauge\n');
+    res.write('# HELP connected_clients The number of clients connected to the streaming server\n');
+    res.write(`connected_clients ${count}.0\n`);
+    res.write('# TYPE connected_channels gauge\n');
+    res.write('# HELP connected_channels The number of Redis channels the streaming server is subscribed to\n');
+    res.write(`connected_channels ${Object.keys(subs).length}.0\n`);
+    res.write('# TYPE pg_pool_total_connections gauge\n');
+    res.write('# HELP pg_pool_total_connections The total number of clients existing within the pool\n');
+    res.write(`pg_pool_total_connections ${pgPool.totalCount}.0\n`);
+    res.write('# TYPE pg_pool_idle_connections gauge\n');
+    res.write('# HELP pg_pool_idle_connections The number of clients which are not checked out but are currently idle in the pool\n');
+    res.write(`pg_pool_idle_connections ${pgPool.idleCount}.0\n`);
+    res.write('# TYPE pg_pool_waiting_queries gauge\n');
+    res.write('# HELP pg_pool_waiting_queries The number of queued requests waiting on a client when all clients are checked out\n');
+    res.write(`pg_pool_waiting_queries ${pgPool.waitingCount}.0\n`);
+    res.write('# EOF\n');
+    res.end();
+  }));
 
   app.use(authenticationMiddleware);
   app.use(errorMiddleware);
 
   app.get('/api/v1/streaming/*', (req, res) => {
-    channelNameToIds(req, channelNameFromPath(req), req.query)
-      .then(({ channelIds, options }) => {
-        const onSend = streamToHttp(req, res);
-        const onEnd = streamHttpEnd(req, subscriptionHeartbeat(channelIds));
+    channelNameToIds(req, channelNameFromPath(req), req.query).then(({ channelIds, options }) => {
+      const onSend = streamToHttp(req, res);
+      const onEnd = streamHttpEnd(req, subscriptionHeartbeat(channelIds));
 
-        streamFrom(channelIds, req, onSend, onEnd, options.needsFiltering);
-      })
-      .catch((err) => {
-        log.verbose(req.requestId, 'Subscription error:', err.toString());
-        httpNotFound(res);
-      });
+      streamFrom(channelIds, req, onSend, onEnd, options.needsFiltering);
+    }).catch(err => {
+      log.verbose(req.requestId, 'Subscription error:', err.toString());
+      httpNotFound(res);
+    });
   });
 
   const wss = new WebSocket.Server({ server, verifyClient: wsVerifyClient });
@@ -1090,7 +977,7 @@ const startWorker = async (workerId) => {
    * @param {any} req
    * @return {string[]}
    */
-  const channelsForUserStream = (req) => {
+  const channelsForUserStream = req => {
     const arr = [`timeline:${req.accountId}`];
 
     if (isInScope(req, ['crypto']) && req.deviceId) {
@@ -1108,19 +995,17 @@ const startWorker = async (workerId) => {
    * See app/lib/ascii_folder.rb for the canon definitions
    * of these constants
    */
-  const NON_ASCII_CHARS =
-    'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž';
-  const EQUIVALENT_ASCII_CHARS =
-    'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz';
+  const NON_ASCII_CHARS        = 'ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž';
+  const EQUIVALENT_ASCII_CHARS = 'AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz';
 
   /**
    * @param {string} str
    * @return {string}
    */
-  const foldToASCII = (str) => {
+  const foldToASCII = str => {
     const regex = new RegExp(NON_ASCII_CHARS.split('').join('|'), 'g');
 
-    return str.replace(regex, (match) => {
+    return str.replace(regex, match => {
       const index = NON_ASCII_CHARS.indexOf(match);
       return EQUIVALENT_ASCII_CHARS[index];
     });
@@ -1130,11 +1015,8 @@ const startWorker = async (workerId) => {
    * @param {string} str
    * @return {string}
    */
-  const normalizeHashtag = (str) => {
-    return foldToASCII(str.normalize('NFKC').toLowerCase()).replace(
-      /[^\p{L}\p{N}_\u00b7\u200c]/gu,
-      ''
-    );
+  const normalizeHashtag = str => {
+    return foldToASCII(str.normalize('NFKC').toLowerCase()).replace(/[^\p{L}\p{N}_\u00b7\u200c]/gu, '');
   };
 
   /**
@@ -1143,113 +1025,108 @@ const startWorker = async (workerId) => {
    * @param {StreamParams} params
    * @return {Promise.<{ channelIds: string[], options: { needsFiltering: boolean } }>}
    */
-  const channelNameToIds = (req, name, params) =>
-    new Promise((resolve, reject) => {
-      switch (name) {
-        case 'user':
-          resolve({
-            channelIds: channelsForUserStream(req),
-            options: { needsFiltering: false },
-          });
+  const channelNameToIds = (req, name, params) => new Promise((resolve, reject) => {
+    switch (name) {
+    case 'user':
+      resolve({
+        channelIds: channelsForUserStream(req),
+        options: { needsFiltering: false },
+      });
 
-          break;
-        case 'user:notification':
-          resolve({
-            channelIds: [`timeline:${req.accountId}:notifications`],
-            options: { needsFiltering: false },
-          });
+      break;
+    case 'user:notification':
+      resolve({
+        channelIds: [`timeline:${req.accountId}:notifications`],
+        options: { needsFiltering: false },
+      });
 
-          break;
-        case 'public':
-          resolve({
-            channelIds: ['timeline:public'],
-            options: { needsFiltering: true },
-          });
+      break;
+    case 'public':
+      resolve({
+        channelIds: ['timeline:public'],
+        options: { needsFiltering: true },
+      });
 
-          break;
-        case 'public:local':
-          resolve({
-            channelIds: ['timeline:public:local'],
-            options: { needsFiltering: true },
-          });
+      break;
+    case 'public:local':
+      resolve({
+        channelIds: ['timeline:public:local'],
+        options: { needsFiltering: true },
+      });
 
-          break;
-        case 'public:remote':
-          resolve({
-            channelIds: ['timeline:public:remote'],
-            options: { needsFiltering: true },
-          });
+      break;
+    case 'public:remote':
+      resolve({
+        channelIds: ['timeline:public:remote'],
+        options: { needsFiltering: true },
+      });
 
-          break;
-        case 'public:media':
-          resolve({
-            channelIds: ['timeline:public:media'],
-            options: { needsFiltering: true },
-          });
+      break;
+    case 'public:media':
+      resolve({
+        channelIds: ['timeline:public:media'],
+        options: { needsFiltering: true },
+      });
 
-          break;
-        case 'public:local:media':
-          resolve({
-            channelIds: ['timeline:public:local:media'],
-            options: { needsFiltering: true },
-          });
+      break;
+    case 'public:local:media':
+      resolve({
+        channelIds: ['timeline:public:local:media'],
+        options: { needsFiltering: true },
+      });
 
-          break;
-        case 'public:remote:media':
-          resolve({
-            channelIds: ['timeline:public:remote:media'],
-            options: { needsFiltering: true },
-          });
+      break;
+    case 'public:remote:media':
+      resolve({
+        channelIds: ['timeline:public:remote:media'],
+        options: { needsFiltering: true },
+      });
 
-          break;
-        case 'direct':
-          resolve({
-            channelIds: [`timeline:direct:${req.accountId}`],
-            options: { needsFiltering: false },
-          });
+      break;
+    case 'direct':
+      resolve({
+        channelIds: [`timeline:direct:${req.accountId}`],
+        options: { needsFiltering: false },
+      });
 
-          break;
-        case 'hashtag':
-          if (!params.tag || params.tag.length === 0) {
-            reject('No tag for stream provided');
-          } else {
-            resolve({
-              channelIds: [`timeline:hashtag:${normalizeHashtag(params.tag)}`],
-              options: { needsFiltering: true },
-            });
-          }
-
-          break;
-        case 'hashtag:local':
-          if (!params.tag || params.tag.length === 0) {
-            reject('No tag for stream provided');
-          } else {
-            resolve({
-              channelIds: [
-                `timeline:hashtag:${normalizeHashtag(params.tag)}:local`,
-              ],
-              options: { needsFiltering: true },
-            });
-          }
-
-          break;
-        case 'list':
-          authorizeListAccess(params.list, req)
-            .then(() => {
-              resolve({
-                channelIds: [`timeline:list:${params.list}`],
-                options: { needsFiltering: false },
-              });
-            })
-            .catch(() => {
-              reject('Not authorized to stream this list');
-            });
-
-          break;
-        default:
-          reject('Unknown stream type');
+      break;
+    case 'hashtag':
+      if (!params.tag || params.tag.length === 0) {
+        reject('No tag for stream provided');
+      } else {
+        resolve({
+          channelIds: [`timeline:hashtag:${normalizeHashtag(params.tag)}`],
+          options: { needsFiltering: true },
+        });
       }
-    });
+
+      break;
+    case 'hashtag:local':
+      if (!params.tag || params.tag.length === 0) {
+        reject('No tag for stream provided');
+      } else {
+        resolve({
+          channelIds: [`timeline:hashtag:${normalizeHashtag(params.tag)}:local`],
+          options: { needsFiltering: true },
+        });
+      }
+
+      break;
+    case 'list':
+      authorizeListAccess(params.list, req).then(() => {
+        resolve({
+          channelIds: [`timeline:list:${params.list}`],
+          options: { needsFiltering: false },
+        });
+      }).catch(() => {
+        reject('Not authorized to stream this list');
+      });
+
+      break;
+    default:
+      reject('Unknown stream type');
+    }
+  });
 
   /**
    * @param {string} channelName
@@ -1278,95 +1155,70 @@ const startWorker = async (workerId) => {
    * @param {string} channelName
    * @param {StreamParams} params
    */
-  const subscribeWebsocketToChannel = (
-    { socket, request, subscriptions },
-    channelName,
-    params
-  ) =>
-    checkScopes(request, channelName)
-      .then(() => channelNameToIds(request, channelName, params))
-      .then(({ channelIds, options }) => {
-        if (subscriptions[channelIds.join(';')]) {
-          return;
-        }
+  const subscribeWebsocketToChannel = ({ socket, request, subscriptions }, channelName, params) =>
+    checkScopes(request, channelName).then(() => channelNameToIds(request, channelName, params)).then(({
+      channelIds,
+      options,
+    }) => {
+      if (subscriptions[channelIds.join(';')]) {
+        return;
+      }
 
-        const onSend = streamToWs(
-          request,
-          socket,
-          streamNameFromChannelName(channelName, params)
-        );
-        const stopHeartbeat = subscriptionHeartbeat(channelIds);
-        const listener = streamFrom(
-          channelIds,
-          request,
-          onSend,
-          undefined,
-          options.needsFiltering
-        );
+      const onSend = streamToWs(request, socket, streamNameFromChannelName(channelName, params));
+      const stopHeartbeat = subscriptionHeartbeat(channelIds);
+      const listener = streamFrom(channelIds, request, onSend, undefined, options.needsFiltering);
 
-        subscriptions[channelIds.join(';')] = {
-          listener,
-          stopHeartbeat,
-        };
-      })
-      .catch((err) => {
-        log.verbose(request.requestId, 'Subscription error:', err.toString());
-        socket.send(JSON.stringify({ error: err.toString() }));
-      });
+      subscriptions[channelIds.join(';')] = {
+        listener,
+        stopHeartbeat,
+      };
+    }).catch(err => {
+      log.verbose(request.requestId, 'Subscription error:', err.toString());
+      socket.send(JSON.stringify({ error: err.toString() }));
+    });
 
   /**
    * @param {WebSocketSession} session
    * @param {string} channelName
    * @param {StreamParams} params
    */
-  const unsubscribeWebsocketFromChannel = (
-    { socket, request, subscriptions },
-    channelName,
-    params
-  ) =>
-    channelNameToIds(request, channelName, params)
-      .then(({ channelIds }) => {
-        log.verbose(
-          request.requestId,
-          `Ending stream from ${channelIds.join(', ')} for ${request.accountId}`
-        );
+  const unsubscribeWebsocketFromChannel = ({ socket, request, subscriptions }, channelName, params) =>
+    channelNameToIds(request, channelName, params).then(({ channelIds }) => {
+      log.verbose(request.requestId, `Ending stream from ${channelIds.join(', ')} for ${request.accountId}`);
 
-        const subscription = subscriptions[channelIds.join(';')];
+      const subscription = subscriptions[channelIds.join(';')];
 
-        if (!subscription) {
-          return;
-        }
+      if (!subscription) {
+        return;
+      }
 
-        const { listener, stopHeartbeat } = subscription;
+      const { listener, stopHeartbeat } = subscription;
 
-        channelIds.forEach((channelId) => {
-          unsubscribe(`${redisPrefix}${channelId}`, listener);
-        });
-
-        stopHeartbeat();
-
-        delete subscriptions[channelIds.join(';')];
-      })
-      .catch((err) => {
-        log.verbose(request.requestId, 'Unsubscription error:', err);
-        socket.send(JSON.stringify({ error: err.toString() }));
+      channelIds.forEach(channelId => {
+        unsubscribe(`${redisPrefix}${channelId}`, listener);
       });
+
+      stopHeartbeat();
+
+      delete subscriptions[channelIds.join(';')];
+    }).catch(err => {
+      log.verbose(request.requestId, 'Unsubscription error:', err);
+      socket.send(JSON.stringify({ error: err.toString() }));
+    });
 
   /**
    * @param {WebSocketSession} session
    */
-  const subscribeWebsocketToSystemChannel = ({
-    socket,
-    request,
-    subscriptions,
-  }) => {
+  const subscribeWebsocketToSystemChannel = ({ socket, request, subscriptions }) => {
     const accessTokenChannelId = `timeline:access_token:${request.accessTokenId}`;
     const systemChannelId = `timeline:system:${request.accountId}`;
 
     const listener = createSystemMessageListener(request, {
+
       onKill() {
         socket.close();
       },
+
     });
 
     subscribe(`${redisPrefix}${accessTokenChannelId}`, listener);
@@ -1374,12 +1226,14 @@ const startWorker = async (workerId) => {
 
     subscriptions[accessTokenChannelId] = {
       listener,
-      stopHeartbeat: () => {},
+      stopHeartbeat: () => {
+      },
     };
 
     subscriptions[systemChannelId] = {
       listener,
-      stopHeartbeat: () => {},
+      stopHeartbeat: () => {
+      },
     };
   };
 
@@ -1387,7 +1241,7 @@ const startWorker = async (workerId) => {
    * @param {string|string[]} arrayOrString
    * @return {string}
    */
-  const firstParam = (arrayOrString) => {
+  const firstParam = arrayOrString => {
     if (Array.isArray(arrayOrString)) {
       return arrayOrString[0];
     } else {
@@ -1419,10 +1273,10 @@ const startWorker = async (workerId) => {
     const onEnd = () => {
       const keys = Object.keys(session.subscriptions);
 
-      keys.forEach((channelIds) => {
+      keys.forEach(channelIds => {
         const { listener, stopHeartbeat } = session.subscriptions[channelIds];
 
-        channelIds.split(';').forEach((channelId) => {
+        channelIds.split(';').forEach(channelId => {
           unsubscribe(`${redisPrefix}${channelId}`, listener);
         });
 
@@ -1459,16 +1313,12 @@ const startWorker = async (workerId) => {
     subscribeWebsocketToSystemChannel(session);
 
     if (location.query.stream) {
-      subscribeWebsocketToChannel(
-        session,
-        firstParam(location.query.stream),
-        location.query
-      );
+      subscribeWebsocketToChannel(session, firstParam(location.query.stream), location.query);
     }
   });
 
   setInterval(() => {
-    wss.clients.forEach((ws) => {
+    wss.clients.forEach(ws => {
       if (ws.isAlive === false) {
         ws.terminate();
         return;
@@ -1479,7 +1329,7 @@ const startWorker = async (workerId) => {
     });
   }, 30000);
 
-  attachServerWithConfig(server, (address) => {
+  attachServerWithConfig(server, address => {
     log.warn(`Worker ${workerId} now listening on ${address}`);
   });
 
@@ -1506,7 +1356,7 @@ const startWorker = async (workerId) => {
  * @param {function(string): void} [onSuccess]
  */
 const attachServerWithConfig = (server, onSuccess) => {
-  if (process.env.SOCKET || (process.env.PORT && isNaN(+process.env.PORT))) {
+  if (process.env.SOCKET || process.env.PORT && isNaN(+process.env.PORT)) {
     server.listen(process.env.SOCKET || process.env.PORT, () => {
       if (onSuccess) {
         fs.chmodSync(server.address(), 0o666);
@@ -1514,25 +1364,21 @@ const attachServerWithConfig = (server, onSuccess) => {
       }
     });
   } else {
-    server.listen(
-      +process.env.PORT || 4000,
-      process.env.BIND || '127.0.0.1',
-      () => {
-        if (onSuccess) {
-          onSuccess(`${server.address().address}:${server.address().port}`);
-        }
+    server.listen(+process.env.PORT || 4000, process.env.BIND || '127.0.0.1', () => {
+      if (onSuccess) {
+        onSuccess(`${server.address().address}:${server.address().port}`);
       }
-    );
+    });
   }
 };
 
 /**
  * @param {function(Error=): void} onSuccess
  */
-const onPortAvailable = (onSuccess) => {
+const onPortAvailable = onSuccess => {
   const testServer = http.createServer();
 
-  testServer.once('error', (err) => {
+  testServer.once('error', err => {
     onSuccess(err);
   });
 
@@ -1544,7 +1390,7 @@ const onPortAvailable = (onSuccess) => {
   attachServerWithConfig(testServer);
 };
 
-onPortAvailable((err) => {
+onPortAvailable(err => {
   if (err) {
     log.error('Could not start server, the port or socket is in use');
     return;
