@@ -1,1 +1,4 @@
 default: styles/application.scss
+compact: styles/compact.scss
+compact2: styles/compact2.scss
+twitama: styles/twitama.scss

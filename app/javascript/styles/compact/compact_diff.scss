@@ -1,0 +1,18 @@
+// compact.scss
+.status__action-bar {
+  position: absolute;
+  opacity: 0;
+  bottom: -9px;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  max-height: 17px;
+  padding-top: 2px;
+  z-index: 200; // NSFW(z-index:100)より上にする
+  &:hover {
+    opacity: 0.9;
+
+    // background-color: black;
+    max-height: 26px;
+  }
+}

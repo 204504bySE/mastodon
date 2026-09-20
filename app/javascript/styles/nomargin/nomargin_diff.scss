@@ -1,0 +1,39 @@
+.status {
+  padding: 0;
+}
+
+.notification__report {
+  padding: 0;
+}
+
+.status__info {
+  margin: 0;
+  padding: 0;
+  gap: 0;
+}
+
+.status--is-quote .status__info {
+  padding: 0;
+  margin: 0;
+}
+
+.status__quote {
+  margin-block-start: 0;
+  margin: 4px;
+}
+
+.status__prepend,
+.notification__message {
+  padding: 1px 0 0;
+}
+
+.status__wrapper--filtered {
+  margin: 0;
+}
+
+.status .attachment-list,
+.status .audio-player,
+.status .media-gallery,
+.status .video-player {
+  margin-top: 0 !important;
+}
