@@ -2831,7 +2831,6 @@ __metadata:
     "@types/hoist-non-react-statics": "npm:3.3.7"
     "@types/http-link-header": "npm:1.0.7"
     "@types/intl": "npm:1.2.2"
-    "@types/js-yaml": "npm:4.0.9"
     "@types/lodash": "npm:4.17.25"
     "@types/object-assign": "npm:4.0.33"
     "@types/prop-types": "npm:15.7.15"
@@ -2893,7 +2892,6 @@ __metadata:
     idb: "npm:8.0.3"
     immutable: "npm:4.3.9"
     intl-messageformat: "npm:11.2.13"
-    js-yaml: "npm:5.3.0"
     lande: "npm:1.0.10"
     lint-staged: "npm:17.0.5"
     lodash: "npm:4.18.1"
@@ -4357,13 +4355,6 @@ __metadata:
   version: 1.2.2
   resolution: "@types/intl@npm:1.2.2"
   checksum: 10c0/f465c320139c01dfc9ae1382406259fd23f6a455aad31517f61b7fd79bdde493e854d6666c2198ae644d8cf6e147e78831ea810f83a787f65b765bc56834f259
-  languageName: node
-  linkType: hard
-
-"@types/js-yaml@npm:4.0.9":
-  version: 4.0.9
-  resolution: "@types/js-yaml@npm:4.0.9"
-  checksum: 10c0/24de857aa8d61526bbfbbaa383aa538283ad17363fcd5bb5148e2c7f604547db36646440e739d78241ed008702a8920665d1add5618687b6743858fae00da211
   languageName: node
   linkType: hard
 
@@ -9305,17 +9296,6 @@ __metadata:
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
   checksum: 10c0/e248708d377aa058eacf2037b07ded847790e6de892bbad3dac0abba2e759cb9f121b00099a65195616badcb6eca8d14d975cb3e89eb1cfda644756402c8aeed
-  languageName: node
-  linkType: hard
-
-"js-yaml@npm:5.3.0":
-  version: 5.3.0
-  resolution: "js-yaml@npm:5.3.0"
-  dependencies:
-    argparse: "npm:^2.0.1"
-  bin:
-    js-yaml: bin/js-yaml.mjs
-  checksum: 10c0/c67383a74026f3b550fe1131c6f0f56df11e227fc9b8b8c1c85154f106831a95a944f2dd4f505498d537790483aec7cd5e3d5e9913fe28fa2d131eeb894a0fd9
   languageName: node
   linkType: hard
 
