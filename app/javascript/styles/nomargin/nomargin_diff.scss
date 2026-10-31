@@ -37,3 +37,15 @@
 .status .video-player {
   margin-top: 0 !important;
 }
+
+.notification-ungrouped,
+.notification-group,
+.notification-group__main__header,
+.notification-group__main__status {
+  padding: 0;
+  gap: 0;
+}
+
+.notification-ungrouped__header {
+  margin-bottom: 0;
+}
